@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Music Streaming App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #4E2680;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 200px);
+            color: #ffffff;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .sub-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0px;
+        }
+        .playlist {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: left;
+            justify-content: left;
+            width: 250px;
+        }
+        .playlist li {
+            margin-bottom: 10px;
+            margin-right: 10px;
+            margin-left: 20px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .playlist li img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        .navigation {
+            display: flex;
+
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .navigation a {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 18px;
+            text-decoration: none;
+            color: #ffffff;
+            border-radius: 30px;
+        }
+        .player-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 460px;
+            height: 100px;
+            background-color: #643EA2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: white;
+        }
+        .player-progress {
+            width: 100%;
+            height: 8px;
+            margin-bottom: 10px;
+            background-color: #4E2680;
+            position: relative;
+            cursor: pointer;
+        }
+        .player-progress .progress-bar {
+            width: 0;
+            height: 100%;
+            background-color: #4C82C4;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .player-details {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .player-details img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        .player-details .song-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .player-details .song-info div {
+            font-size: 14px;
+        }
+        .player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .player-controls button {
+            margin: 0 10px;
+            font-size: 24px;
+            color: #ffffff;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        .play-icon::before {
+            content: "\25B6";
+        }
+        .pause-icon::before {
+            content: "\23F8";
+        }
+        .volume-bar {
+            width: 100px;
+            height: 8px;
+            top: -80px;
+            left: 180px;
+            background-color: #4E2680;
+            position: relative;
+            cursor: pointer;
+        }
+        .volume-bar .volume-level {
+            width: 100px;
+            height: 100%;
+            background-color: #4C82C4;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .volume-control {
+        display: flex;
+        align-items: center;
+        }
+        .volume-icon {
+        font-size: 20px;
+        display: inline-block;
+        vertical-align: middle;
+        }
+        .volume-icon {
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        vertical-align: middle;
+        background-repeat: no-repeat;
+        }
+        #playlistContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+        
+        border-radius: 10px;
+        list-style-type: none;
+        align-items: left;
+        float: left;
+        }
+        #playlistContainer li {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        flex-direction: column;
+        align-items: left;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        grid-gap: 10px;
+        }
+        #playlistContainer li img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        margin-bottom: 10px;
+        margin-right: 10px;
+        grid-column: 1;
+        float: left;
+        justify-self: left;
+        }
+        #playlistContainer li .songDetails {
+        grid-column: 1;
+        text-align: left;
+         overflow: hidden;
+        }
+        #playlistContainer li .details {
+        grid-column: 2;
+        text-align: left;
+        float: left;
+        }
+        #playlistContainer li .songDetails p {
+        grid-column: 2;
+        text-align: left
+        }
+        #playlistContainer2 {
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+        
+        border-radius: 10px;
+        list-style-type: none;
+        align-items: left;
+        float: left;
+        }
+        #playlistContainer2 li {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        flex-direction: column;
+        align-items: left;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        grid-gap: 10px;
+        }
+        #playlistContainer2 li img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        margin-bottom: 10px;
+        margin-right: 10px;
+        grid-column: 1;
+        float: left;
+        justify-self: left;
+        }
+        #playlistContainer2 li .songDetails {
+        grid-column: 1;
+        text-align: left;
+         overflow: hidden;
+        }
+        #playlistContainer2 li .details {
+        grid-column: 2;
+        text-align: left;
+        float: left;
+        }
+        #playlistContainer2 li .songDetails p {
+        grid-column: 2;
+        text-align: left
+        }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+
+
+
+<body>
+    <div class="navigation">
+        <a href="#" onclick="showPage('home')">Home</a>
+        <a href="#" onclick="showPage('profile')">Profile</a>
+    </div>
+    <div id="home" class="container">
+        <h1 class="header">Home</h1>
+        <div class="sub-container">
+            <ul class="playlist">
+                <li onclick="playSong('Songs/Apple Juice.mp3', 'Apple Juice', 'On1Beat', 'Album covers/applejuice.jpg')">
+                    <img src="Album covers/applejuice.jpg" alt="Apple Juice">
+                    <div class="details">
+                        <div>Apple Juice</div>
+                        <div>On1Beat</div>
+                    </div>
+                </li>
+                <li onclick="playSong('Songs/Cupid.mp3', 'Cupid', 'FIFTYFIFTY', 'Album covers/cupid.png')">
+                    <img src="Album covers/cupid.png" alt="Cupid">
+                    <div class="details">
+                        <div>Cupid</div>
+                        <div>FIFTYFIFTY</div>
+                    </div>
+                </li>
+                <li onclick="playSong('Songs/Glimpse of Us.mp3', 'Glimpse Of Us', 'JOJI', 'Album covers/glimpseofus.png')">
+                    <img src="Album covers/glimpseofus.png" alt="Song 3">
+                    <div class="details">
+                        <div>Glimpse Of Us</div>
+                        <div>JOJI</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+
+
+
+        <h2 class="header">Your Recent Playlists:</h2>
+        <div class="sub-container">
+            <ul class="playlist">
+                <li onclick="showPlaylist('Playlist 1')">
+                    <img src="Playlist covers/party.jpg" alt="Playlist 1">
+                    <div class="details">
+                        <div>PARTY</div>
+                        <div>For the night out</div>
+                    </div>
+                    <br>
+                </li>
+                <li onclick="showPlaylist('Playlist 2')">
+                    <img src="Playlist covers/chill.jpg" alt="Playlist 2">
+                    <div class="details">
+                        <div>Chill Vibes</div>
+                        <div>Bing Chilling</div>
+                    </div>
+                </li>
+                <li onclick="showPlaylist('Playlist 3')">
+                    <img src="Playlist covers/driving.jpg" alt="Playlist 3">
+                    <div class="details">
+                        <div>Driving</div>
+                        <div>For the drives</div>
+                    </div>
+                </li>
+            </ul>
+            <ul id="playlistContainer" style="display: none;"></ul>
+        </div>
+    </div>
+
+
+    <div class="player-bar">
+        <div class="player-details">
+            <img id="songImage" src="" alt="Song Image">
+            <div class="song-info">
+                <div id="songTitle"></div>
+                <div id="songDescription"></div>
+            </div>
+        </div>
+        <div class="player-progress" onclick="seek(event)">
+            <div class="progress-bar"></div>
+        </div>
+        <div class="player-controls">
+            <button onclick="skipBackward()">&#8810;</button>
+            <button onclick="togglePlayPause()" id="playPauseButton" class="play-icon"></button>
+            <button onclick="skipForward()">&#8811;</button>
+        </div>
+                <div class="volume-bar" onclick="adjustVolume(event)">
+                    <div class="volume-level"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <div id="profile" class="container"> 
+        <h1 class="header">Your Playlists:</h1>
+        <div class="sub-container">
+            <ul class="playlist">
+                <li onclick="showPlaylist2('Playlist 1')">
+                    <img src="Playlist covers/party.jpg" alt="Playlist 1">
+                    <div class="details">
+                        <div>PARTY</div>
+                        <div>For the night out</div>
+                    </div>
+                    <br>
+                </li>
+                <li onclick="showPlaylist2('Playlist 2')">
+                    <img src="Playlist covers/chill.jpg" alt="Playlist 2">
+                    <div class="details">
+                        <div>Chill Vibes</div>
+                        <div>Bing Chilling</div>
+                    </div>
+                </li>
+                <li onclick="showPlaylist2('Playlist 3')">
+                    <img src="Playlist covers/driving.jpg" alt="Playlist 3">
+                    <div class="details">
+                        <div>Driving</div>
+                        <div>For the drives</div>
+                    </div>
+                </li>
+                <li onclick="showPlaylist2('Playlist 4')">
+                    <img src="Playlist covers/sleep.jpeg" alt="Playlist 4">
+                    <div class="details">
+                        <div>Sleep</div>
+                        <div>Mimimimi</div>
+                    </div>
+                </li>
+                <li onclick="showPlaylist2('Playlist 5')">
+                    <img src="Playlist covers/you.jpeg" alt="Playlist 4">
+                    <div class="details">
+                        <div>You</div>
+                        <div>For you</div>
+                    </div>
+                </li>
+            </ul>
+            <ul id="playlistContainer2" style="display: none;"></ul>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        // JavaScript code to handle page navigation and music playback
+        const homePage = document.getElementById('home');
+        const profilePage = document.getElementById('profile');
+        const playlist = document.querySelectorAll('.playlist li');
+        const progressBar = document.querySelector('.player-progress .progress-bar');
+        const playPauseButton = document.getElementById('playPauseButton');
+        const songImage = document.getElementById('songImage');
+        const songTitle = document.getElementById('songTitle');
+        const songDescription = document.getElementById('songDescription');
+        let currentSongIndex = 0;
+        let isPlaying = false;
+        let audio = new Audio();
+        let progressInterval;
+        function showPage(pageId) {
+            homePage.style.display = 'none';
+            profilePage.style.display = 'none';
+            document.getElementById(pageId).style.display = 'block';
+        }
+        function playSong(songSrc, title, description, imageUrl) {
+            audio.src = songSrc;
+            audio.play();
+            isPlaying = true;
+            songImage.src = imageUrl;
+            songTitle.textContent = title;
+            songDescription.textContent = description;
+            playPauseButton.classList.remove('play-icon');
+            playPauseButton.classList.add('pause-icon');
+        }
+        function pauseSong() {
+            audio.pause();
+            isPlaying = false;
+            playPauseButton.classList.remove('pause-icon');
+            playPauseButton.classList.add('play-icon');
+        }
+        function togglePlayPause() {
+            if (isPlaying) {
+                pauseSong();
+            } else {
+                if (audio.src) {
+                    audio.play();
+                } else {
+                    playSong();
+                }
+            }
+        }
+        function skipForward() {
+    audio.currentTime += 15;
+}
+function skipBackward() {
+    audio.currentTime -= 15;
+}
+        function updateProgressBar() {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+        function startProgressInterval() {
+            progressInterval = setInterval(updateProgressBar, 100);
+        }
+        function stopProgressInterval() {
+            clearInterval(progressInterval);
+        }
+        function seek(event) {
+            const progressBarWidth = event.target.clientWidth;
+            const clickPosition = event.clientX - event.target.getBoundingClientRect().left;
+            const progress = (clickPosition / progressBarWidth) * 100;
+            progressBar.style.width = `${progress}%`;
+            audio.currentTime = (progress / 100) * audio.duration;
+        }
+        audio.addEventListener('ended', () => {
+            skipForward();
+        });
+        audio.addEventListener('play', () => {
+            isPlaying = true;
+            playPauseButton.classList.remove('play-icon');
+            playPauseButton.classList.add('pause-icon');
+            startProgressInterval();
+        });
+        audio.addEventListener('pause', () => {
+            isPlaying = false;
+            playPauseButton.classList.remove('pause-icon');
+            playPauseButton.classList.add('play-icon');
+            stopProgressInterval();
+        });
+        audio.addEventListener('timeupdate', () => {
+            updateProgressBar();
+        });
+        function showPlaylist(playlistName) {
+            const playlistContainer = document.getElementById('playlistContainer');
+            const songs = getPlaylistSongs(playlistName);
+            playlistContainer.innerHTML = '';
+            songs.forEach(song => {
+                const li = document.createElement('li');
+                const img = document.createElement('img');
+                const details = document.createElement('div');
+                const title = document.createElement('div');
+                const description = document.createElement('div');
+                li.addEventListener('click', () => {
+                    playSong(song.src, song.title, song.description, song.image);
+                });
+                img.src = song.image;
+                img.alt = song.title;
+                img.width = 80;
+                img.height = 80;
+                details.classList.add('details');
+                title.textContent = song.title;
+                description.textContent = song.description;
+                details.appendChild(title);
+                details.appendChild(description);
+                li.appendChild(img);
+                li.appendChild(details);
+                playlistContainer.appendChild(li);
+            });
+            playlistContainer.style.display = 'flex';
+        }
+        function getPlaylistSongs(playlistName) {
+            const songsByPlaylist = {
+                'Playlist 1': [
+                    { src: 'Playlist_1/Apple Juice.mp3', title: 'Apple Juice', description: 'On1Beat', image: 'Album covers/applejuice.jpg' },
+                    { src: 'Playlist_1/Hold This.mp3', title: 'Hold This', description: 'LELELELELE', image: 'Album covers/holdthis.jpeg' },
+                    { src: 'Songs/Sicko Mode.mp3', title: 'SICKO MODE', description: 'Travis Scott', image: 'Album covers/sickomode.jpeg' }
+                ],
+                'Playlist 2': [
+                    { src: 'Songs/Kill Bill.mp3', title: 'Kill Bill', description: 'SZA', image: 'Album covers/killbill.jpg' },
+                    { src: 'Songs/OMG.mp3', title: 'OMG', description: 'NewJeans', image: 'Album covers/omg.jpg' },
+                    { src: 'Songs/Ditto.mp3', title: 'Ditto', description: 'NewJeans', image: 'Album covers/ditto.jpg' }
+                ],
+                'Playlist 3': [
+                    { src: 'Songs/Golden Hour.mp3', title: 'Golden Hour', description: 'Jvke', image: 'Album covers/goldenhour.jpg' },
+                    { src: 'Songs/Glimpse of Us.mp3', title: 'Glimpse Of Us', description: 'JOJI', image: 'Album covers/glimpseofus.png' },
+                    { src: 'Songs/Kill Bill.mp3', title: 'Kill Bill', description: 'SZA', image: 'Album covers/killbill.jpg' }
+                ],
+                'Playlist 4': [
+                    { src: 'Songs/LIMBO.mp3', title: 'LIMBO', description: 'Keshi', image: 'Album covers/limbo.jpeg' },
+                    { src: 'Songs/Halleys Comet.mp3', title: 'Halleys Comet', description: 'Billie Eilish', image: 'Album covers/halleycomet.jpg' },
+                    { src: 'Songs/UNDERSTAND.mp3', title: 'UNDERSTAND', description: 'Keshi', image: 'Album covers/understand.jpeg' }
+                ],
+                'Playlist 5': [
+                    { src: 'Songs/Js lullaby.mp3', title: 'Js Lullaby', description: 'Delaney Bailey', image: 'Album covers/js lullaby.jpeg' },
+                    { src: 'Songs/Until I Found You.mp3', title: 'Until I Found You', description: 'Stephen Sanchez', image: 'Album covers/untilifoundyou.jpeg' },
+                    { src: 'Songs/Those Eyes.mp3', title: 'Those Eyes', description: 'New West', image: 'Album covers/thoseeyes.jpeg' }
+                ]
+            }
+            return songsByPlaylist[playlistName] || [];
+        }
+        function playPlaylistSong(event) {
+            // Play the song or perform any other action here
+            const songSrc = event.target.getAttribute('data-src');
+            const songTitle = event.target.getAttribute('data-title');
+            const songDescription = event.target.getAttribute('data-description');
+            const songImage = event.target.getAttribute('data-image');
+            console.log('Playing Song:', songTitle);
+            console.log('Description:', songDescription);
+            console.log('Image:', songImage);}
+        function adjustVolume(event) {
+            const volumeBarWidth = event.target.clientWidth;
+            const clickPosition = event.clientX - event.target.getBoundingClientRect().left;
+            const volume = clickPosition / volumeBarWidth;
+
+            audio.volume = volume;
+            const volumeLevel = document.querySelector('.volume-bar .volume-level');
+            volumeLevel.style.width = `${volume * 100}%`;}
+        const volumeSlider = document.getElementById('volumeSlider');
+const volumeIcon = document.querySelector('.volume-icon i');
+volumeSlider.addEventListener('input', updateVolumeIcon);
+function showPlaylist2(playlistName) {
+            const playlistContainer2 = document.getElementById('playlistContainer2');
+            const songs = getPlaylistSongs(playlistName);
+            playlistContainer2.innerHTML = '';
+            songs.forEach(song => {
+                const li = document.createElement('li');
+                const img = document.createElement('img');
+                const details = document.createElement('div');
+                const title = document.createElement('div');
+                const description = document.createElement('div');
+                li.addEventListener('click', () => {
+                    playSong(song.src, song.title, song.description, song.image);
+                });
+                img.src = song.image;
+                img.alt = song.title;
+                img.width = 80;
+                img.height = 80;
+                details.classList.add('details');
+                title.textContent = song.title;
+                description.textContent = song.description;
+
+                details.appendChild(title);
+                details.appendChild(description);
+                li.appendChild(img);
+                li.appendChild(details);
+                playlistContainer2.appendChild(li);
+            });
+            playlistContainer2.style.display = 'flex';}
+
+
+
+
+    </script>
+</body>
+</html>
